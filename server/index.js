@@ -1,8 +1,19 @@
 import express from 'express';
+import dotenv from 'dotenv';
 
+import { mongoConnect } from './DB/mongo.js';
+
+dotenv.config();
 const app = express();
 
-app.listen(3000, () => {
-  console.log('Sever is running on port 3000');
-});
+const PORT = process.env.PORT || 3000;
 
+async function startServer() {
+  await mongoConnect();
+
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}...`);
+  });
+}
+
+startServer();
