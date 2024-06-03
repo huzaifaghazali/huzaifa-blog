@@ -13,7 +13,7 @@ function OAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
@@ -38,12 +38,13 @@ function OAuth() {
       console.log(error);
     }
   };
+
   return (
     <Button
       gradientDuoTone='pinkToOrange'
       type='button'
       outline
-      onClick={handleClick}
+      onClick={handleGoogleClick}
     >
       <AiFillGoogleCircle className='w-6 h-6 mr-2' />
       Continue with Google
