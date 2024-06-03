@@ -2,11 +2,13 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import userReducer from './user/userSlice';
+import themeReducer from './theme/themeSlice';
 
 // Combine all the reducers into a single root reducer
 const rootReducer = combineReducers({
-  // This is the user reducer that handles all the user-related state
+  // reducer that handles all the user-related state and theme state
   user: userReducer,
+  theme: themeReducer,
 });
 
 // Configuration for redux-persist
