@@ -55,7 +55,7 @@ export const signin = async (req, res, next) => {
 
     // Generate a JSON Web Token (JWT) using the user's ID and admin status
     const token = jwt.sign(
-      { _id: validUser._id, isAdmin: validUser.isAdmin },
+      { id: validUser._id, isAdmin: validUser.isAdmin },
       process.env.JWT_SECRET
     );
 

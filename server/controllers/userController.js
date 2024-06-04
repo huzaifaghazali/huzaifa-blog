@@ -8,9 +8,9 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   const { userId } = req.params;
-  let { username, email, profilePicture } = req.body;
+  let { username } = req.body;
 
-  if (req.user._id !== userId) {
+  if (req.user.id !== userId) {
     return next(errorHandler(403, 'You are not allowed to update this user'));
   }
 
