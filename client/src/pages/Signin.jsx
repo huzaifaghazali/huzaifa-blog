@@ -31,7 +31,7 @@ function Signin() {
       dispatch(signInStart());
 
       const res = await fetch('/api/auth/signin', {
-        method: 'POSt',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
@@ -43,7 +43,7 @@ function Signin() {
       }
 
       if (res.ok) {
-        dispatch(signInSuccess(data.user));
+        dispatch(signInSuccess(data));
         navigate('/');
       }
     } catch (error) {
