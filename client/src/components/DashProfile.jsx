@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Button, TextInput, Modal } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -45,7 +45,7 @@ function DashProfile() {
   };
 
   // Function to upload an image file to Firebase storage
-  const uploadImage = async () => {
+  const uploadImage = useCallback(async () => {
     setImageFileUploading(true);
     setImageFileUploadError(null);
 
@@ -84,7 +84,7 @@ function DashProfile() {
         });
       }
     );
-  };
+  }, [imageFile]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -165,7 +165,7 @@ function DashProfile() {
     if (imageFile) {
       uploadImage();
     }
-  }, [imageFile]);
+  }, [imageFile, uploadImage]);
 
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
