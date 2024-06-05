@@ -21,6 +21,7 @@ import {
   deleteUserSuccess,
 } from '../features/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -247,6 +248,18 @@ function DashProfile() {
         >
           {loading ? 'Loading...' : 'Update'}
         </Button>
+
+        {currentUser.isAdmin && (
+          <Link to={'/create-post'}>
+            <Button
+              type='button'
+              gradientDuoTone='purpleToBlue'
+              className='w-full'
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
       </form>
 
       <div className='flex justify-between mt-5'>
