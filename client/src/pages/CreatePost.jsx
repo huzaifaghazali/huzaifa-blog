@@ -1,9 +1,69 @@
-import React from 'react';
-import { Button, FileInput, Select, TextInput } from 'flowbite-react';
+import React, { useState } from 'react';
+import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
+import { app } from '../firebase';
 
 function CreatePost() {
+  const [file, setFile] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  const handleUploadImage = async () => {
+    try {
+      if (!file) {
+        setImageUploadError('Please select an image');
+        return;
+      }
+      setImageUploadError(null);
+
+      const storage = getStorage(app); // Get a reference to the Firebase storage
+      const fileName = new Date().getTime() + file.name; // Generate a unique file name by appending the current time to the file name
+      const storageRef = ref(storage, fileName); // Create a reference to the file in the storage with the generated file name
+      const uploadTask = uploadBytesResumable(storageRef, file); // Start the upload of the file to the storage
+      // Listen to the state changes of the upload task
+      uploadTask.on(
+        // When the state changes, update the progress of the upload
+        'state_changed',
+        (snapshot) => {
+          // Calculate the progress of the upload based on the number of bytes transferred and the total number of bytes
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+          // Update the state with the progress of the upload
+          setImageUploadProgress(progress.toFixed(0));
+        },
+        (error) => {
+          setImageUploadError('Image upload failed');
+          setImageUploadProgress(null);
+        },
+        // When the upload is complete, handle the successful upload
+        () => {
+          // Get the URL of the uploaded file
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageUploadProgress(null);
+            setImageUploadError(null);
+            setFormData((prev) => ({ ...prev, image: downloadURL }));
+          });
+        }
+      );
+    } catch (error) {
+      setImageUploadError('Image upload failed');
+      setImageUploadProgress(null);
+      console.log(error);
+    }
+  };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
@@ -24,12 +84,39 @@ function CreatePost() {
           </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-          <FileInput type='file' accept='image/*' />
-          <Button type='button' gradientDuoTone='greenToBlue' size='sm' outline>
-            Upload Image
+          <FileInput
+            type='file'
+            accept='image/*'
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <Button
+            type='button'
+            gradientDuoTone='greenToBlue'
+            size='sm'
+            outline
+            onClick={handleUploadImage}
+            disabled={imageUploadProgress}
+          >
+            {imageUploadProgress ? (
+              <div className='w-16 h-16'>
+                <CircularProgressbar
+                  value={imageUploadProgress}
+                  text={`${imageUploadProgress || 0}%`}
+                />
+              </div>
+            ) : (
+              'Upload Image'
+            )}
           </Button>
         </div>
-
+        {imageUploadError && <Alert color='failure'>{imageUploadError}</Alert>}
+        {formData.image && (
+          <img
+            src={formData.image}
+            alt='upload'
+            className='w-full h-72 object-cover'
+          />
+        )}
         <ReactQuill
           theme='snow'
           placeholder='Write something...'
