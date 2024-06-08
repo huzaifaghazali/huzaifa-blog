@@ -5,6 +5,7 @@ import { mongoConnect } from './DB/mongo.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoute.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 3000;
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
 
 async function startServer() {
   await mongoConnect();
