@@ -116,3 +116,42 @@ export const deleteComment = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getComments = async (req, res, next) => {
+  const { startIndex, limit, sort } = req.query;
+
+  try {
+    // Parse the startIndex parameter into an integer, defaulting to 0 if it is not a valid number.
+    const startingIndex = parseInt(startIndex) || 0;
+    // Parse the limit parameter into an integer, defaulting to 9 if it is not a valid number.
+    const maxLimit = parseInt(limit) || 9;
+    // Determine the sort direction based on the order parameter, defaulting to descending order.
+    const sortDirection = sort === 'desc' ? 1 : -1;
+
+    // Retrieve the comments from the database, sorted by creation date in the specified direction,
+    // skipping the specified number of comments and limiting the number of comments retrieved.
+    const comments = await Comment.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startingIndex)
+      .limit(maxLimit);
+
+    // Count the total number of comments in the database.
+    const totalComments = await Comment.countDocuments();
+    // Get the current date.
+    const now = new Date();
+    // Calculate the date one month ago.
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    // Count the number of comments created in the previous month.
+    const lastMonthComments = await Comment.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    res.status(200).json({ comments, totalComments, lastMonthComments });
+  } catch (error) {
+    next(error);
+  }
+};
