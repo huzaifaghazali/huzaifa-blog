@@ -10,6 +10,7 @@ function CommentSection({ postId }) {
   const [commentError, setCommentError] = useState(null);
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -67,6 +68,14 @@ function CommentSection({ postId }) {
     } catch (error) {
       console.log(error.message);
     }
+  };
+
+  const handleEdit = async (comment, editedContent) => {
+    setComments((prevComments) =>
+      prevComments.map((c) =>
+        c._id === comment._id ? { ...c, content: editedContent } : c
+      )
+    );
   };
 
   useEffect(() => {
@@ -147,7 +156,12 @@ function CommentSection({ postId }) {
             </div>
           </div>
           {comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} onLike={handleLike} />
+            <Comment
+              key={comment._id}
+              comment={comment}
+              onLike={handleLike}
+              onEdit={handleEdit}
+            />
           ))}
         </>
       )}
