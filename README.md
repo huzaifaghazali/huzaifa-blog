@@ -52,6 +52,11 @@ Huzaifa's Blog is a full-stack blogging platform where users can read, comment o
 
   ![hblog10](https://github.com/huzaifaghazali/huzaifa-blog/assets/63412385/94cbf588-414a-47c9-8d0d-60260c2fa807)
 
+  ![hblog11](https://github.com/huzaifaghazali/huzaifa-blog/assets/63412385/8eb3453b-a202-4564-8ba9-a35fd539d174)
+
+  ![hblog12](https://github.com/huzaifaghazali/huzaifa-blog/assets/63412385/e00b476b-89cf-4714-9e41-aa260dfaecbb)
+
+  ![hblog13](https://github.com/huzaifaghazali/huzaifa-blog/assets/63412385/cb432d40-71da-425d-a0b9-01207e50b6ea)
 
 ## Tech Stack
 
